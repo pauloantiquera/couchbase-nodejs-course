@@ -1,5 +1,13 @@
 #Couchbase + NodeJS + Express Course Lab App
 
+##Lab 1​  ­ Install Couchbase, load bucket, create primary index, and install Postman (Using docker image)
+
+ 1. Install and configure Couchbase Server 4.5+ as a single node (Docker image)
+ 2. Survey the Couchbase administration console 
+ 3. Create a bucket and load documents into Couchbase using cbdocloader 
+ 4. Create a primary index to support ad hoc queries (CREATE PRIMARY INDEX) 
+ 5. Install Postman to test REST API URLs
+
 ##Lab 2 - Connect to Cluster, open password protected Bucket, get JSON document, object, and values
 
  1. Install the couchbase module, and configure an application to use it
