@@ -1,0 +1,11 @@
+{
+  "name": "couchbase-nodejs-course",
+  "version": "0.1.0",
+  "description": "Couchbase + NodeJS + Express Course Lab App",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Paulo Antiquera",
+  "license": "MIT"
+}
