@@ -1,23 +1,15 @@
-// Require express and body-parser for JSON handling
-
 var couchbase = require("couchbase");
 var express = require("express");
 var bodyParser = require('body-parser');
 var uuid = require("node-uuid");
 
-// Create cluster, app, and jsonParser objects
-
 var cluster = new couchbase.Cluster("localhost:8091");
 var app = express();
 var jsonParser = bodyParser.json();
 
-// Set port, password, and bucketName variables
-
 var port = process.env.port || 3000;
 var bucketName = "customer360";
 var password = "password";
-
-// Open customer360 bucket and create reference for use in routes
 
 var customer360Bucket = cluster.openBucket(bucketName, password, function(error) {
   if (error) {
@@ -26,7 +18,6 @@ var customer360Bucket = cluster.openBucket(bucketName, password, function(error)
 
   console.log(bucketName, 'bucket opened');
 });
-
 
 // Set up get, post, put, and delete routes
 // Set jsonParser as middleware for POST and PUT routes, so that req.body can be accessed for JSON
@@ -49,16 +40,29 @@ app.get("/customers/:id", function(request, response){
 });
 
 app.post("/customers", jsonParser, function(request, response) {
-  var docId = 'customer::' + uuid.v4();
-  var doc = request.body;
 
-  customer360Bucket.insert(docId, doc, function(error, result) {
+  function performInsertOperation(bucket, docId, doc, callback) {
+    bucket.insert(docId, doc, callback);
+  } 
+
+  function performUpsertOperation(bucket, docId, doc, callback) {
+    bucket.upsert(docId, doc, callback);
+  }
+
+  function operationCallback(error, result) {
     if (error) {
-      return response.status(400).json({'error' : 'Bad request'});
+      return response.status(400).json(error);
     }
 
     response.json(result);
-  });
+  }
+
+  var docIdSuffix = 'an-example-key';
+  var docId = 'customer::' + docIdSuffix;
+  var doc = request.body;
+
+  //performInsertOperation(customer360Bucket, docId, doc, operationCallback);
+  performUpsertOperation(customer360Bucket, docId, doc, operationCallback);
 });
 
 app.put("/customers/:id", jsonParser, function(request, response){
