@@ -1,6 +1,6 @@
 #Couchbase + NodeJS + Express Course Lab App
 
-##Lab 1​  ­ Install Couchbase, load bucket, create primary index, and install Postman (Using docker image)
+##Lab 1​ - Install Couchbase, load bucket, create primary index, and install Postman (Using docker image)
 
  1. Install and configure Couchbase Server 4.5+ as a single node (Docker image)
  2. Survey the Couchbase administration console 
