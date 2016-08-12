@@ -3,7 +3,7 @@ function getLab3Module() {
   var express = require("express");
   var uuid = require("node-uuid");
 
-  var cluster = new couchbase.Cluster("localhost:8091");
+  var cluster = new couchbase.Cluster("localhost:8091");    
   var router = express.Router();
 
   var bucketName = "customer360";
