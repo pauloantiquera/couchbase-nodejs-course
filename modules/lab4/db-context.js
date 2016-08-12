@@ -12,7 +12,7 @@ function getDBContext() {
         throw error;
       }
 
-      console.log('Lab 4: Bucket ' + customer360BucketName + ' opend.');
+      console.log('Lab 4: Bucket ' + customer360BucketName + ' opened.');
     });
   }
 

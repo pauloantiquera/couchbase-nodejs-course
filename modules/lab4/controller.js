@@ -1,25 +1,15 @@
 function getLab4ModuleController() {
   var countryRepository = require('./country-repository')();
   var customerRepository = require('./customer-repository')();
+  var responseHandler = require('./response-handler')();
 
-  function respondWithErrorOrResult(response, error, result) {
-    if (error) {
-      return response.status(500).json(error);
-    }
-
-    if (result.length == 0) {
-      return response.status(204).end();
-    }
-
-    response.json(result);
-  }
 
   function doFindCountryById(request, response) {
     
     var countryId = request.params.id;
 
     countryRepository.findCountryById(countryId, function(error, result) {
-      respondWithErrorOrResult(response, error, result);
+      responseHandler.respondWithErrorOrResult(error, result, response);
     });
   }
 
@@ -27,13 +17,22 @@ function getLab4ModuleController() {
     var countryCode = request.params.code;
 
     customerRepository.findCustomerByCountryCode(countryCode, function(error, result) {
-      respondWithErrorOrResult(response, error, result);
+      responseHandler.respondWithErrorOrResult(error, result, response);
+    });
+  }
+
+  function doCreateNewCustomer(request, response) {
+    var customerDocument = request.body;
+
+    customerRepository.createNewCustomer(customerDocument, function(error, result) {
+      responseHandler.respondWithErrorOrCreated(error, result, request, response);
     });
   }
 
   var controller = {
     findCountryById: doFindCountryById,
-    findCustomerByCountryCode: doFindCustomerByCountryCode
+    findCustomerByCountryCode: doFindCustomerByCountryCode,
+    createNewCustomer: doCreateNewCustomer
   }
 
   return controller;
