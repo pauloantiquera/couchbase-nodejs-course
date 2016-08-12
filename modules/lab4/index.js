@@ -6,6 +6,7 @@ function getLab4ModuleApi() {
   var router = express.Router();
 
   router.get('/country/:id', lab4Controller.findCountryById);
+  router.get('/customers/:code', lab4Controller.findCustomerByCountryCode);
 
   return router;
 }
