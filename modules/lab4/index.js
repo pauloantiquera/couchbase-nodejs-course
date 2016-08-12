@@ -9,6 +9,7 @@ function getLab4ModuleApi() {
   router.get('/customers/:code', lab4Controller.findCustomerByCountryCode);
   router.post('/customers', lab4Controller.createNewCustomer);
   router.put('/customers/:id', lab4Controller.updateCustomerFirstAndLastName);
+  router.delete('/customers/:id', lab4Controller.deleteCustomer);
 
   return router;
 }

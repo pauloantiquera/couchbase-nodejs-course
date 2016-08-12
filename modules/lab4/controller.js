@@ -32,8 +32,16 @@ function getLab4ModuleController() {
     var firstName = request.body.firstName;
     var lastName = request.body.lastName;
 
-    customerRepository.updateCustomerFirstAndLastName(customerDocId, firstName, lastName, function(error, result) {
+    customerRepository.updateCustomerFirstAndLastName(customerDocId, firstName, lastName, function(error) {
       responseHandler.respondWithErrorOrOk(error, response);
+    });
+  }
+
+  function doDeleteCustomer(request, response) {
+    var customerDocId = request.params.id;
+
+    customerRepository.deleteCustomer(customerDocId, function(error) {
+      responseHandler.respondWithErrorOrNoContent(error, response);
     });
   }
 
@@ -41,7 +49,8 @@ function getLab4ModuleController() {
     findCountryById: doFindCountryById,
     findCustomerByCountryCode: doFindCustomerByCountryCode,
     createNewCustomer: doCreateNewCustomer,
-    updateCustomerFirstAndLastName: doUpdateCustomerFirstAndLastName
+    updateCustomerFirstAndLastName: doUpdateCustomerFirstAndLastName,
+    deleteCustomer: doDeleteCustomer
   };
 
   return controller;

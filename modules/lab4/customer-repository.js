@@ -56,10 +56,27 @@ function getCustomerRepository() {
     });
   }
 
+  function deleteCustomer(docId, callback) {
+    var customer360Bucket = couchbaseContext.open();
+
+    var query = couchbaseContext.createQuery('DELETE FROM customer360 USE KEYS($1)');
+
+    customer360Bucket.query(query, [docId], function(error) {
+      couchbaseContext.disconnect(customer360Bucket);
+      
+      if(error) {
+        return callback(error);
+      }
+
+      callback();
+    })
+  }
+
   var customerRepository = {
     findCustomerByCountryCode: findCustomerByCountryCode,
     createNewCustomer: createNewCustomer,
-    updateCustomerFirstAndLastName: updateCustomerFirstAndLastName
+    updateCustomerFirstAndLastName: updateCustomerFirstAndLastName,
+    deleteCustomer: deleteCustomer
   };
 
   return customerRepository;

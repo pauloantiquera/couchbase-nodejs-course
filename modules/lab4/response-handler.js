@@ -35,10 +35,19 @@ function getResponseHandler() {
     response.status(200).end();
   }
 
+  function respondWithErrorOrNoContent(error, response) {
+    if (error) {
+      return response.status(500).json(error);
+    }    
+
+    response.status(204).end(); 
+  }
+
   var responseHandler = {
     respondWithErrorOrResult: respondWithErrorOrResult,
     respondWithErrorOrCreated: respondWithErrorOrCreated,
-    respondWithErrorOrOk: respondWithErrorOrOk
+    respondWithErrorOrOk: respondWithErrorOrOk,
+    respondWithErrorOrNoContent: respondWithErrorOrNoContent
   };
 
   return responseHandler;
