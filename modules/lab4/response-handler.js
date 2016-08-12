@@ -27,9 +27,18 @@ function getResponseHandler() {
     response.status(201).location(uri).json({'docId': docId});
   }
 
+  function respondWithErrorOrOk(error, response) {
+    if (error) {
+      return response.status(500).json(error);
+    }    
+
+    response.status(200).end();
+  }
+
   var responseHandler = {
     respondWithErrorOrResult: respondWithErrorOrResult,
-    respondWithErrorOrCreated: respondWithErrorOrCreated
+    respondWithErrorOrCreated: respondWithErrorOrCreated,
+    respondWithErrorOrOk: respondWithErrorOrOk
   };
 
   return responseHandler;

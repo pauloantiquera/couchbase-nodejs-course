@@ -40,9 +40,26 @@ function getCustomerRepository() {
     });
   }
 
+  function updateCustomerFirstAndLastName(docId, firstName, lastName, callback) {
+    var customer360Bucket = couchbaseContext.open();
+
+    var query = couchbaseContext.createQuery('UPDATE customer360 USE KEYS($1) SET firstName = $2, lastName = $3');
+
+    customer360Bucket.query(query, [docId, firstName, lastName], function(error) {
+      couchbaseContext.disconnect(customer360Bucket);
+      
+      if(error) {
+        return callback(error);
+      }
+
+      callback();
+    });
+  }
+
   var customerRepository = {
     findCustomerByCountryCode: findCustomerByCountryCode,
-    createNewCustomer: createNewCustomer
+    createNewCustomer: createNewCustomer,
+    updateCustomerFirstAndLastName: updateCustomerFirstAndLastName
   };
 
   return customerRepository;

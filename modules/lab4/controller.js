@@ -3,9 +3,7 @@ function getLab4ModuleController() {
   var customerRepository = require('./customer-repository')();
   var responseHandler = require('./response-handler')();
 
-
   function doFindCountryById(request, response) {
-    
     var countryId = request.params.id;
 
     countryRepository.findCountryById(countryId, function(error, result) {
@@ -22,18 +20,29 @@ function getLab4ModuleController() {
   }
 
   function doCreateNewCustomer(request, response) {
-    var customerDocument = request.body;
+    var customerDoc = request.body;
 
-    customerRepository.createNewCustomer(customerDocument, function(error, result) {
+    customerRepository.createNewCustomer(customerDoc, function(error, result) {
       responseHandler.respondWithErrorOrCreated(error, result, request, response);
+    });
+  }
+
+  function doUpdateCustomerFirstAndLastName(request, response) {
+    var customerDocId = request.params.id;
+    var firstName = request.body.firstName;
+    var lastName = request.body.lastName;
+
+    customerRepository.updateCustomerFirstAndLastName(customerDocId, firstName, lastName, function(error, result) {
+      responseHandler.respondWithErrorOrOk(error, response);
     });
   }
 
   var controller = {
     findCountryById: doFindCountryById,
     findCustomerByCountryCode: doFindCustomerByCountryCode,
-    createNewCustomer: doCreateNewCustomer
-  }
+    createNewCustomer: doCreateNewCustomer,
+    updateCustomerFirstAndLastName: doUpdateCustomerFirstAndLastName
+  };
 
   return controller;
 }
