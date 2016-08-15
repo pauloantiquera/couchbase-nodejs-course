@@ -30,3 +30,11 @@
   3. INSERT new document in POST operation 
   4. UPDATE existing document in PUT operation 
   5. DELETE existing document in DELETE operation
+
+##Lab 5 - Build Ottoman models and use to import data
+  
+  1. Install Ottoman framework and review files 
+  2. Open bucket and assign instance to Ottoman framework 
+  3. Create Ottoman models including read­only and referenced attributes 
+  4. Create and load new data bucket using Ottoman models
+  

@@ -9,9 +9,12 @@
   "author": "Paulo Antiquera",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.0.1",
     "body-parser": "^1.15.2",
     "couchbase": "^2.2.2",
     "express": "^4.14.0",
-    "node-uuid": "^1.4.7"
+    "multer": "^1.2.0",
+    "node-uuid": "^1.4.7",
+    "ottoman": "^1.0.4"
   }
 }
