@@ -3,6 +3,7 @@ html(lang="en")
   head
     title= pageTitle
     script(type="text/javascript").
+    
       function openWebSocketOnDocumentoLoad() {
         var wsocket = new WebSocket('#{wsURI}');
 
@@ -21,12 +22,10 @@ html(lang="en")
             case '#{errorMessageType}' :
               console.log(message.error);
               break;
+            default :              
+              break;
           }         
-        });
-
-        wsocket.addEventListener('close', function(event) {
-          console.log('WebSocket closed.');
-        })
+        });        
       }
       
       window.addEventListener('load', openWebSocketOnDocumentoLoad);
