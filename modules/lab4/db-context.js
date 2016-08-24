@@ -1,36 +1,30 @@
 function getDBContext() {
-  var couchbase = require('couchbase');  
+    var CouchBaseDbContext = require('../dbutils/couchbaseDbContext');
 
-  var cluster = new couchbase.Cluster("localhost:8091");
-  var n1qlQuery = couchbase.N1qlQuery;
-  var customer360BucketName = 'customer360';
-  var customer360BucketPassword = 'password';  
+    var customer360BucketName = 'customer360';
+    var customer360BucketPassword = 'password';
 
-  function openBucket() {
-    return cluster.openBucket(customer360BucketName, customer360BucketPassword, function(error) {
-      if (error) {
-        throw error;
-      }
+    var couchbaseDbContext = new CouchBaseDbContext('localhost:8091');
 
-      console.log('Lab 4: Bucket ' + customer360BucketName + ' opened.');
-    });
-  }
+    function openBucket() {
+        return couchbaseDbContext.openBucket(customer360BucketName, customer360BucketPassword);
+    }
 
-  function disconnectFromBucket(bucket) {
-    bucket.disconnect();
-  }
+    function disconnectFromBucket(bucket) {
+        couchbaseDbContext.disconnectFromBucket(bucket);
+    }
 
-  function createN1qlQuery(queryString) {
-    return n1qlQuery.fromString(queryString);
-  }
+    function createN1qlQuery(queryString) {
+        return couchbaseDbContext.createN1qlQuery(queryString);
+    }
 
-  var dbContext = {
-    open: openBucket,
-    disconnect: disconnectFromBucket,
-    createQuery: createN1qlQuery
-  };
+    var dbContext = {
+        open: openBucket,
+        disconnect: disconnectFromBucket,
+        createQuery: createN1qlQuery
+    };
 
-  return dbContext;
+    return dbContext;
 }
 
 module.exports = getDBContext;
