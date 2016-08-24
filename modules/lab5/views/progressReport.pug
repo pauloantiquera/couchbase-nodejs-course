@@ -1,0 +1,40 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+    script(type="text/javascript").
+      function openWebSocketOnDocumentoLoad() {
+        var wsocket = new WebSocket('#{wsURI}');
+
+        wsocket.addEventListener('message', function(event) {       
+          if (event.data === '#{doneMessage}') {
+            wsocket.send('#{thanksMessage}');
+            return wsocket.close();
+          }
+
+          var message = JSON.parse(event.data);
+          switch(message.type) {
+            case '#{progressMessageType}' :
+              document.getElementById('current').innerText = message.current;
+              document.getElementById('total').innerText = message.total; 
+              break;
+            case '#{errorMessageType}' :
+              console.log(message.error);
+              break;
+          }         
+        });
+
+        wsocket.addEventListener('close', function(event) {
+          console.log('WebSocket closed.');
+        })
+      }
+      
+      window.addEventListener('load', openWebSocketOnDocumentoLoad);
+
+  body
+    p Processing&nbsp;
+      span#current
+        |0
+      | &nbsp;of&nbsp;
+      span#total
+        |0
