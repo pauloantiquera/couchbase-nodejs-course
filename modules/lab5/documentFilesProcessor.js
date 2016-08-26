@@ -2,6 +2,8 @@ var EventEmitter = require('events');
 var util = require('util');
 var fs = require('fs');
 var async = require('async');
+var typedDocumentHandler = require('./typedDocumentHandler');
+var documentUtils = require('./documentUtils');
 
 const PROGRESS_EVENT = 'progress';
 const DONE_EVENT = 'done';
@@ -18,7 +20,13 @@ function DocumentFilesProcessor(_documentFiles_) {
 util.inherits(DocumentFilesProcessor, EventEmitter);
 
 function readFile(file) {
-    return JSON.parse(fs.readFileSync(file.path));
+    var data = fs.readFileSync(file.path, { encoding: 'UTF-8' });
+    return data;
+}
+
+function persist(fileData) {
+    var document = documentUtils.parseDocumentFromFileData(fileData);
+    typedDocumentHandler.persist(document);
 }
 
 function deleteFile(file) {
@@ -29,8 +37,12 @@ function processFile(file, fileProcessCallback) {
     async.waterfall(
         [
             (fileReadCallback) => {
-                var document = readFile(file);
-                fileReadCallback(null, file, document);
+                var fileData = readFile(file);
+                fileReadCallback(null, file, fileData);
+            },
+            (fileRead, fileData, filePersistCallback) => {
+                persist(fileData);
+                filePersistCallback(null, fileRead, fileData);
             },
             (fileProcessed, document, fileDeleteCallback) => {
                 deleteFile(fileProcessed);
