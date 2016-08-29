@@ -19,8 +19,14 @@ function DocumentFilesProcessor(_documentFiles_) {
 
 util.inherits(DocumentFilesProcessor, EventEmitter);
 
-function readFile(file) {
-    var data = fs.readFileSync(file.path, { encoding: 'UTF-8' });
+function readFile(file, fileReadeCallback) {
+    var data = fs.readFile(file.path, { encoding: 'UTF-8' }, (error, fileData) => {
+        if (error) {
+            return fileReadeCallback(error);
+        }
+
+        fileReadeCallback(null, file, fileData);
+    });
     return data;
 }
 
@@ -29,24 +35,28 @@ function persist(fileData) {
     typedDocumentHandler.persist(document);
 }
 
-function deleteFile(file) {
-    return fs.unlinkSync(file.path);
+function deleteFile(file, document, fileDeleteCallback) {
+    return fs.unlink(file.path, (error) => {
+        if (error) {
+            return fileDeleteCallback(error);
+        }
+
+        fileDeleteCallback(null, document);
+    });
 }
 
-function processFile(file, fileProcessCallback) {
+function readPersistAndDeleteFilesInCascading(file, fileProcessCallback) {
     async.waterfall(
         [
             (fileReadCallback) => {
-                var fileData = readFile(file);
-                fileReadCallback(null, file, fileData);
+                readFile(file, fileReadCallback);
             },
             (fileRead, fileData, filePersistCallback) => {
                 persist(fileData);
                 filePersistCallback(null, fileRead, fileData);
             },
             (fileProcessed, document, fileDeleteCallback) => {
-                deleteFile(fileProcessed);
-                fileDeleteCallback(null, document);
+                deleteFile(fileProcessed, document, fileDeleteCallback);
             }
         ],
         function(error, result) {
@@ -66,7 +76,7 @@ function interateDocuments(files, index, eventEmitter) {
 
     var file = files[index];
 
-    processFile(file, function(error, document) {
+    readPersistAndDeleteFilesInCascading(file, function(error, document) {
         if (error) {
             eventEmitter.emit(ERROR_EVENT, error);
         } else {
@@ -77,6 +87,8 @@ function interateDocuments(files, index, eventEmitter) {
         interateDocuments(files, index + 1, eventEmitter);
     });
 }
+
+
 
 function doProcessDocuments() {
     var eventEmitter = this;
