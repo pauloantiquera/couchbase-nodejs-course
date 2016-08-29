@@ -7,8 +7,6 @@ function getLab5ModuleController() {
         if (error) {
             return console.error(error);
         }
-
-        console.log(documents);
     }
 
     function doImportDataFromUploadedFiles(request, response) {

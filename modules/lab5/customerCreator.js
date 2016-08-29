@@ -1,30 +1,36 @@
-function getCustomerModel() {
-    var customerModel = {
-        'username': { type: 'string', readonly: true },
-        'firstName': 'string',
-        'lastName': 'string',
-        'created': 'Date',
-        'billingAddress': {
-            //'country': { ref: Country },
-            'country': 'string',
-            'state': 'string',
-            'city': 'string',
-            'line1': 'string',
-            'postalCode': 'string'
-        },
-        'updated': 'Date',
-        'email': 'string'
-    };
+var DbContext = require('./dbContext');
+var countryCreator = require('./countryCreator');
 
-    return customerModel;
-}
+var Country = countryCreator.create();
 
+var customerModel = {
+    'username': { type: 'string', readonly: true },
+    'firstName': 'string',
+    'lastName': 'string',
+    'created': 'Date',
+    'billingAddress': {
+        'country': { ref: Country },
+        'state': 'string',
+        'city': 'string',
+        'line1': 'string',
+        'postalCode': 'string'
+    },
+    'updated': 'Date',
+    'email': 'string'
+};
 
 var customerModelId = { id: 'username' };
 
-function createCustomer(ottoman) {
-    var customerModel = getCustomerModel();
-    return ottoman.model('Customer', customerModel, customerModelId);
+var Customer;
+
+function createCustomer() {
+    var dbContext = DbContext.getDbContextInstance();
+
+    if (!Customer) {
+        Customer = dbContext.createModelFor('Customer', customerModel, customerModelId);
+    }
+
+    return Customer;
 }
 
 var customerCreator = {

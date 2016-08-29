@@ -1,3 +1,5 @@
+var DbContext = require('./dbContext');
+
 var countryModel = {
     'countryCode': { type: 'string', readonly: true },
     'gdp': 'number',
@@ -11,10 +13,11 @@ var countryModelId = { id: 'countryCode' };
 
 var Country;
 
-function doCreateCountry(ottoman) {
+function doCreateCountry() {
+    var dbContext = DbContext.getDbContextInstance();
+
     if (!Country) {
-        console.log('No country');
-        Country = ottoman.model('Country', countryModel, countryModelId);
+        Country = dbContext.createModelFor('Country', countryModel, countryModelId);
     }
 
     return Country;

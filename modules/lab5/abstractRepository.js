@@ -1,38 +1,27 @@
-var ottoman = require('ottoman');
-
-var DbContext = require('./dbContext');
 var entityCreatorFactory = require('./entityCreatorFactory');
 
-var entity;
+var Entity;
 var dbContext;
+var entityCache = {};
 
 function AbstractRepository(entityName) {
     if (!entityName) {
         throw new Error('A entity name must be provided.');
     }
 
-    entity = createRepositoryEntity(entityName);
-}
-
-function initializeDbContext() {
-    dbContext = new DbContext();
-}
-
-function initializeOttomanBucket() {
-    ottoman.bucket = dbContext.openCustomer360_odmBucket();
+    Entity = createRepositoryEntity(entityName);
 }
 
 function createRepositoryEntity(entityName) {
-    initializeDbContext();
-    initializeOttomanBucket();
-
     var createEntity = entityCreatorFactory(entityName);
 
-    return createEntity(ottoman);
+    return createEntity();
 };
 
 function create(entityData, creationCallback) {
-    entity.create(entityData, creationCallback);
+    var entity = new Entity(entityData);
+
+    return entity;
 }
 
 AbstractRepository.prototype.create = create;

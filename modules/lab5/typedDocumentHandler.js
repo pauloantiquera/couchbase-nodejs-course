@@ -9,8 +9,6 @@ function persist(document) {
         if (error) {
             return console.error(error);
         }
-
-        console.log(result);
     });
 }
 
